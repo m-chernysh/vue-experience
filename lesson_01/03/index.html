@@ -1,0 +1,55 @@
+﻿<!doctype html>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+      integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script src="user-component.js"></script>
+
+<div class="container" id="app_03">
+    <h1>{{title}}</h1>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item" v-for="tab in tabs" @click="tabsActive = tab">
+            <a class="nav-link" :class="{ 'active' : tabsActive == tab }" href="#">{{tab}}</a>
+        </li>
+    </ul>
+
+    <div class="m-4 box-shadow"
+         v-for="user in users"
+         :is="'user-' + tabsActive"
+         :user="user">
+    </div>
+
+</div>
+
+<script>
+  new Vue({
+    el: "#app_03",
+
+    data: function () {
+      return {
+        title: 'Пробуем наследование копмонет в VUE',
+        tabs: ['lite', 'middle', 'height'],
+        tabsActive: null,
+        users: []
+      }
+    },
+
+    methods: {
+      loadUsers: function (values) {
+        this.users = values
+      }
+    },
+
+    created: function () {
+      this.tabsActive = this.tabs[0];
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then(function (response) {
+          return response.json();
+        })
+        .then(this.loadUsers)
+    }
+
+  })
+</script>
